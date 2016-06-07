@@ -18,6 +18,41 @@
 		removeEvent:function(ele,eventName,eventFn){//删除事件封装
 			ele.removeEventListener(eventName,eventFn,false);
 		},
+		containClass:function(ele,classNames){
+			var classNameArr = ele.className.split(" ");
+			for( var i = 0; i < classNameArr.length; i++ ){
+				if( classNameArr[i] === classNames ){
+					return true;
+				}
+			}
+			
+			return false;
+		},
+		parents:function(obj,selector){
+			/*
+			 
+			 * selector
+			 * id
+			 * class
+			 * 标签
+			 * */
+			
+			if( selector.charAt(0) === "#" ){
+				while(obj.id !== selector.slice(1)){
+					obj = obj.parentNode;
+				}
+			}else if( selector.charAt(0) === "." ){
+				while(!tools.containClass(obj,selector.slice(1))){
+					obj = obj.parentNode;
+				}
+			}else{
+				while(obj && obj.nodeName !== selector){
+					obj = obj.parentNode;
+				}
+			}
+			
+			return obj;
+		},
 		each:function(obj,callBack){//递归的封装
 			for (var i = 0; i < obj.length; i++) {
 				callBack(obj[i],i)
@@ -45,6 +80,14 @@
 			}else{
 				false;
 			}
+		},
+		store:function (namespace, data)  {
+			if (data) {
+				return localStorage.setItem(namespace, JSON.stringify(data));
+			}
+
+			var store = localStorage.getItem(namespace);
+			return (store && JSON.parse(store)) || [];
 		}
 	}
 	window.tools = tools;
