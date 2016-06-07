@@ -52,49 +52,99 @@ tools.each(checkInput,function(item,index){
 });
 //碰撞检测
 
-//tools.addEvent(document,'mousedown',function(ev){
-//	
-//})
 tools.addEvent(content,'mousedown',function(ev){
 	var e = ev || event;
 	var disX = e.clientX;
 	var disY = e.clientY;
 	var oDiv = document.createElement('div');
 	oDiv.className = 'collision';
-	oDiv.style.left = e.clientX + 'px';
-	oDiv.style.top = e.clientY + 'px';
+	oDiv.left = e.clientX + 'px';
+	oDiv.top = e.clientY + 'px';
 	document.body.appendChild(oDiv);
-	document.onmousemove = function(ev){
-		var e = ev || event;
-		if(e.clientX>disX){
-			oDiv.style.left = disX + 'px';
-		}else{
-			oDiv.style.left = e.clientX + 'px';
-		}
-		if(e.clientY>disY){
-			oDiv.style.top = disY + 'px';
-		}else{
-			oDiv.style.top = e.clientY + 'px';
-		}
-		oDiv.style.width = Math.abs(e.clientX -disX) + 'px';
-		oDiv.style.height = Math.abs(e.clientY -disY) + 'px';
-		for (var i = 0; i < lis.length; i++) {
-			if(tools.collisionRect(oDiv,lis[i])){
-				icon[i].style.borderColor = '#2e80dc';
-				checkInput[i].style.display = 'block';
-				checkInput[i].checked = true;
+	tools.addEvent(document,'mousemove',handleMove);
+		function handleMove(ev){
+			var e = ev || event;
+			if(e.clientX>disX){
+				oDiv.style.left = disX + 'px';
 			}else{
-				icon[i].style.borderColor = '#fff';
-				checkInput[i].style.display = 'none';
-				checkInput[i].checked = false;
+				oDiv.style.left = e.clientX + 'px';
+			}
+			if(e.clientY>disY){
+				oDiv.style.top = disY + 'px';
+			}else{
+				oDiv.style.top = e.clientY + 'px';
+			}
+			oDiv.style.width = Math.abs(e.clientX -disX) + 'px';
+			oDiv.style.height = Math.abs(e.clientY -disY) + 'px';
+			var num11=0;
+			for (var i = 0; i < lis.length; i++) {
+				if(tools.collisionRect(oDiv,lis[i])){
+					icon[i].style.borderColor = '#2e80dc';
+					checkInput[i].style.display = 'block';
+					checkInput[i].checked = true;
+					num11++;
+				}else{
+					icon[i].style.borderColor = '#fff';
+					checkInput[i].style.display = 'none';
+					checkInput[i].checked = false;
+					num11--;
+				}
+			}
+			
+			console.log(num11)
+			if(num11==lis.length){
+				allSelected.checked = true;
+			}else{
+				allSelected.checked = false;
 			}
 		}
-	}
-	document.onmouseup = function(){
-		document.body.removeChild(oDiv)
-		document.onmousemove=document.onmouseup = null;
-	}
+	
+	tools.addEvent(document,'mouseup',function(){
+		document.body.removeChild(oDiv);
+		tools.removeEvent(document,'mousemove',handleMove )
+	});
 	ev.preventDefault();
-});
+})
+//tools.addEvent(content,'mousedown',function(ev){
+//	var e = ev || event;
+//	var disX = e.clientX;
+//	var disY = e.clientY;
+//	var oDiv = document.createElement('div');
+//	oDiv.className = 'collision';
+//	oDiv.style.left = e.clientX + 'px';
+//	oDiv.style.top = e.clientY + 'px';
+//	document.body.appendChild(oDiv);
+//	document.onmousemove = function(ev){
+//		var e = ev || event;
+//		if(e.clientX>disX){
+//			oDiv.style.left = disX + 'px';
+//		}else{
+//			oDiv.style.left = e.clientX + 'px';
+//		}
+//		if(e.clientY>disY){
+//			oDiv.style.top = disY + 'px';
+//		}else{
+//			oDiv.style.top = e.clientY + 'px';
+//		}
+//		oDiv.style.width = Math.abs(e.clientX -disX) + 'px';
+//		oDiv.style.height = Math.abs(e.clientY -disY) + 'px';
+//		for (var i = 0; i < lis.length; i++) {
+//			if(tools.collisionRect(oDiv,lis[i])){
+//				icon[i].style.borderColor = '#2e80dc';
+//				checkInput[i].style.display = 'block';
+//				checkInput[i].checked = true;
+//			}else{
+//				icon[i].style.borderColor = '#fff';
+//				checkInput[i].style.display = 'none';
+//				checkInput[i].checked = false;
+//			}
+//		}
+//	}
+//	document.onmouseup = function(){
+//		document.body.removeChild(oDiv)
+//		document.onmousemove=document.onmouseup = null;
+//	}
+//	ev.preventDefault();
+//});
 	
 
