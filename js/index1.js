@@ -43,6 +43,10 @@
 		});
 	}
 	tools.addEvent(createFile,"click",function (){
+		if( this.isCreateStatus ){
+			names.select();
+			return;
+		};
 		var newLi = createLi();
 		filesSet.appendChild(newLi);
 		names = tools.$(".names",newLi)[0];
@@ -51,7 +55,7 @@
 		strong.style.display = "none";
 		edtor.style.display = "block";
 		names.select();
-		
+		this.isCreateStatus = true;
 		handleLi(newLi);
 		
 	});
@@ -70,16 +74,32 @@
 			strong.style.display = "block";
 			edtor.style.display = "none";
 			strong.innerHTML = names.value;
+			createFile.isCreateStatus = false;
 			ev.stopPropagation();
 		})
 		tools.addEvent(cancel,"click",function (ev){
 			filesSet.removeChild(li);
+			createFile.isCreateStatus = false;
 			ev.stopPropagation();
 		})
+		tools.addEvent(li,"mouseenter",function (){
+			if( !createFile.isCreateStatus ){
+				icon.style.borderColor = "#2e80dc";	
+				checkInput.style.display = "block";	
+			}
+			
+		})
+		tools.addEvent(li,"mouseleave",function (){
+			if( !checkInput.checked ){
+				icon.style.borderColor = "#fff";	
+				checkInput.style.display = "none";	
+			}
+		});
 		tools.addEvent(li,"click",function (){
 			filesSet.innerHTML = "";
 
 		});
+		
 	};
 	
 })()
